@@ -18,20 +18,31 @@ warrentytracker/
 ├─ requirements.txt        # Python dependencies
 ├─ .env.example            # Environment variables
 ├─ app/
-│  ├─ core/
+│  ├─ api/                 # Routers/views — thin, no business logic here
+│  │  └─ v1/endpoints/
+│  │     ├─ auth.py        # Auth endpoints
+│  │     └─ users.py       # User endpoints
+│  ├─ core/                # Settings, security helpers
 │  │  ├─ config.py         # Settings
 │  │  ├─ security.py       # Password hashing, JWT
 │  │  └─ deps.py           # Database session
-│  ├─ models/
+│  ├─ models/              # ORM models
 │  │  └─ user.py           # SQLAlchemy models
-│  ├─ schemas/
-│  │  ├─ user.py           # Pydantic schemas
+│  ├─ schemas/             # Pydantic schemas
+│  │  ├─ user.py           # User schemas
 │  │  └─ token.py          # Token schemas
-│  ├─ crud/
-│  │  └─ user.py           # Database operations
-│  └─ api/v1/endpoints/
-│     ├─ auth.py           # Auth endpoints
-│     └─ users.py          # User endpoints
+│  └─ services/            # Business logic
+│     ├─ user.py           # User CRUD + auth logic
+│     └─ auth.py           # Register, login, current user
+├─ tests/                  # Unit tests, mirrors app structure
+│  ├─ test_api/v1/         # Endpoint tests
+│  ├─ test_services/       # Service tests
+│  ├─ test_models/         # Model tests
+│  └─ test_main.py         # Page/route smoke tests
+├─ docs/                   # Diagrams, API contract
+│  ├─ architecture.md      # Layered architecture diagram
+│  ├─ api-contract.md      # API contract docs
+│  └─ api-contract.json    # OpenAPI spec
 ├─ static/
 │  ├─ css/style.css        # Frontend styles
 │  └─ js/app.js            # Frontend JavaScript
@@ -67,6 +78,14 @@ uvicorn main:app --reload
 | POST | /api/v1/auth/register | Register new user |
 | POST | /api/v1/auth/login | Login and get JWT token |
 | GET | /api/v1/auth/me | Get current user info |
+| GET | /api/v1/users | List users |
+| GET | /api/v1/users/{id} | Get user by id |
+
+## Running Tests
+
+```bash
+pytest
+```
 
 ## Tech Stack
 

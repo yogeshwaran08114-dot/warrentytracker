@@ -1,4 +1,4 @@
-from app.crud.user import (
+from app.services.user import (
     get_user,
     get_user_by_email,
     get_users,
