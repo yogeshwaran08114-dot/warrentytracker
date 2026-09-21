@@ -19,9 +19,9 @@ flowchart TD
         SCHEMAS["schemas/ (Pydantic)"]
     end
 
-    DB[(SQLite<br/>warrantyhub.db)]
+    DB[(MySQL 8<br/>local or Railway)]
 
-    UI -->|HTTP /api/v1| API
+    UI -->|React + Axios /api/v1| API
     API -->|Pydantic validation| SCHEMAS
     API --> SERVICES
     SERVICES -->|password hash / JWT| CORE

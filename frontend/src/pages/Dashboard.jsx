@@ -1,0 +1,3 @@
+import { Link } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
+export default function Dashboard() { const { user } = useAuth(); return <><section className="hero container"><p className="eyebrow">YOUR COVERAGE DESK</p><h1>Welcome back, {user?.full_name || user?.name || 'customer'}.</h1><p>Register a purchase once. Keep its warranty, dates, and claims in one calm place.</p><Link className="btn btn-dark" to="/register-product">Register a product</Link></section><section className="container quick-links"><Link to="/products"><strong>My products</strong><span>Review coverage and expiry dates</span></Link><Link to="/claims"><strong>Warranty claims</strong><span>Track issues you have submitted</span></Link></section></> }

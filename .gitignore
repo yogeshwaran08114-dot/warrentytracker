@@ -118,6 +118,10 @@ ipython_config.py
 # pdm.lock
 # pdm.toml
 .pdm-python
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
 .pdm-build/
 
 # pixi

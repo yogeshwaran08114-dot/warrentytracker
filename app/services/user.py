@@ -22,6 +22,7 @@ def create_user(db: Session, user: UserCreate) -> User:
     db_user = User(
         email=user.email,
         hashed_password=hashed_password,
+        name=user.full_name,
         full_name=user.full_name,
         mobile_number=user.mobile_number,
     )
