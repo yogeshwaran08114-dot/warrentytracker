@@ -79,3 +79,16 @@ def test_login_unknown_email_returns_401(client):
         data={"username": "unknown@example.com", "password": "password123"},
     )
     assert resp.status_code == 401
+
+def test_register_mismatched_passwords_returns_422(client):
+    resp = client.post(
+        "/api/v1/auth/register",
+        json={
+            "email": "mismatch@example.com",
+            "password": "password123",
+            "confirm_password": "different123",
+            "full_name": "Mismatch User",
+            "mobile_number": "1234567890",
+        },
+    )
+    assert resp.status_code == 422
