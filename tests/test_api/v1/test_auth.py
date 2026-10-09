@@ -72,3 +72,10 @@ def test_me_endpoint_returns_current_user(client):
 def test_me_endpoint_invalid_token_returns_401(client):
     resp = client.get("/api/v1/auth/me", headers={"Authorization": "Bearer bogus"})
     assert resp.status_code == 401
+
+def test_login_unknown_email_returns_401(client):
+    resp = client.post(
+        "/api/v1/auth/login",
+        data={"username": "unknown@example.com", "password": "password123"},
+    )
+    assert resp.status_code == 401
