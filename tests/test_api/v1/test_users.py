@@ -41,3 +41,17 @@ def test_get_user_by_id(client, db_session):
 def test_get_user_not_found_returns_404(client, db_session):
     resp = client.get("/api/v1/users/999", headers=admin_headers(client, db_session))
     assert resp.status_code == 404
+
+def test_list_users_without_admin_token_returns_403(client):
+    register_user(client)
+    token = client.post(
+        "/api/v1/auth/login",
+        data={"username": "alice@example.com", "password": "password123"},
+    ).json()["access_token"]
+
+    resp = client.get(
+        "/api/v1/users",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+
+    assert resp.status_code == 403
