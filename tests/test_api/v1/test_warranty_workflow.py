@@ -177,3 +177,68 @@ def test_duplicate_serial_number_is_rejected(client, db_session):
     )
     assert second.status_code == 400
     assert second.json()["detail"] == "Serial number already registered"
+
+def test_customer_cannot_view_another_users_warranty_status(client, db_session):
+    admin_email = "warranty-owner-admin@example.com"
+    owner_email = "warranty-owner@example.com"
+    other_email = "warranty-other@example.com"
+
+    register(client, admin_email)
+    admin = db_session.query(User).filter(User.email == admin_email).one()
+    admin.role = "admin"
+    db_session.commit()
+
+    admin_headers = {
+        "Authorization": f"Bearer {token(client, admin_email)}"
+    }
+
+    register(client, owner_email)
+    owner_headers = {
+        "Authorization": f"Bearer {token(client, owner_email)}"
+    }
+
+    register(client, other_email)
+    other_headers = {
+        "Authorization": f"Bearer {token(client, other_email)}"
+    }
+
+    category = client.post(
+        "/api/v1/categories",
+        headers=admin_headers,
+        json={"name": "Warranty Access Category", "description": "Test"},
+    )
+    assert category.status_code == 201
+
+    product = client.post(
+        "/api/v1/products",
+        headers=admin_headers,
+        json={
+            "product_name": "Warranty Access Product",
+            "brand": "Example",
+            "model_number": "WARRANTY-ACCESS-001",
+            "category_id": category.json()["data"]["id"],
+            "default_warranty_months": 12,
+        },
+    )
+    assert product.status_code == 201
+
+    registration = client.post(
+        "/api/v1/registrations",
+        headers=owner_headers,
+        json={
+            "product_id": product.json()["data"]["id"],
+            "serial_number": "WARRANTY-OWNER-001",
+            "purchase_date": "2026-01-15",
+        },
+    )
+    assert registration.status_code == 201
+
+    registration_id = registration.json()["data"]["id"]
+
+    response = client.get(
+        f"/api/v1/warranties/{registration_id}/status",
+        headers=other_headers,
+    )
+
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Registration not found"
