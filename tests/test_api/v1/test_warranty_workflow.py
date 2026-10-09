@@ -242,3 +242,22 @@ def test_customer_cannot_view_another_users_warranty_status(client, db_session):
 
     assert response.status_code == 404
     assert response.json()["detail"] == "Registration not found"
+
+def test_registration_rejects_empty_serial_number(client):
+    email = "empty-serial-customer@example.com"
+    register(client, email)
+    customer_headers = {
+        "Authorization": f"Bearer {token(client, email)}"
+    }
+
+    response = client.post(
+        "/api/v1/registrations",
+        headers=customer_headers,
+        json={
+            "product_id": 1,
+            "serial_number": "",
+            "purchase_date": "2026-01-15",
+        },
+    )
+
+    assert response.status_code == 422
