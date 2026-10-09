@@ -104,3 +104,17 @@ def test_customer_cannot_list_admin_warranties(client):
     )
 
     assert response.status_code == 403
+
+def test_customer_cannot_list_admin_claims(client):
+    email = "claims-customer@example.com"
+    register(client, email)
+    customer_headers = {
+        "Authorization": f"Bearer {token(client, email)}"
+    }
+
+    response = client.get(
+        "/api/v1/admin/claims",
+        headers=customer_headers,
+    )
+
+    assert response.status_code == 403
