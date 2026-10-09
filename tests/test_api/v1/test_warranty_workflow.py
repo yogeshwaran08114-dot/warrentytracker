@@ -118,3 +118,62 @@ def test_customer_cannot_list_admin_claims(client):
     )
 
     assert response.status_code == 403
+
+def test_duplicate_serial_number_is_rejected(client, db_session):
+    admin_email = "duplicate-admin@example.com"
+    customer_email = "duplicate-customer@example.com"
+
+    register(client, admin_email)
+    admin = db_session.query(User).filter(User.email == admin_email).one()
+    admin.role = "admin"
+    db_session.commit()
+
+    admin_headers = {
+        "Authorization": f"Bearer {token(client, admin_email)}"
+    }
+
+    register(client, customer_email)
+    customer_headers = {
+        "Authorization": f"Bearer {token(client, customer_email)}"
+    }
+
+    category = client.post(
+        "/api/v1/categories",
+        headers=admin_headers,
+        json={"name": "Duplicate Test Category", "description": "Test"},
+    )
+    assert category.status_code == 201
+
+    product = client.post(
+        "/api/v1/products",
+        headers=admin_headers,
+        json={
+            "product_name": "Duplicate Test Product",
+            "brand": "Example",
+            "model_number": "DUP-001",
+            "category_id": category.json()["data"]["id"],
+            "default_warranty_months": 12,
+        },
+    )
+    assert product.status_code == 201
+
+    registration_data = {
+        "product_id": product.json()["data"]["id"],
+        "serial_number": "DUPLICATE-SERIAL-001",
+        "purchase_date": "2026-01-15",
+    }
+
+    first = client.post(
+        "/api/v1/registrations",
+        headers=customer_headers,
+        json=registration_data,
+    )
+    assert first.status_code == 201
+
+    second = client.post(
+        "/api/v1/registrations",
+        headers=customer_headers,
+        json=registration_data,
+    )
+    assert second.status_code == 400
+    assert second.json()["detail"] == "Serial number already registered"
