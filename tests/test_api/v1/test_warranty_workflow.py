@@ -326,3 +326,21 @@ def test_customer_cannot_view_another_users_registration(client, db_session):
 
     assert response.status_code == 404
     assert response.json()["detail"] == "Registration not found"
+
+def test_claim_rejects_short_issue_description(client):
+    email = "short-claim-description@example.com"
+    register(client, email)
+    customer_headers = {
+        "Authorization": f"Bearer {token(client, email)}"
+    }
+
+    response = client.post(
+        "/api/v1/claims",
+        headers=customer_headers,
+        json={
+            "registration_id": 1,
+            "issue_description": "Bad",
+        },
+    )
+
+    assert response.status_code == 422
