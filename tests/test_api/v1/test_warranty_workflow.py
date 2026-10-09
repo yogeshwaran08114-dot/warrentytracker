@@ -90,3 +90,17 @@ def test_customer_warranty_claim_and_admin_workflow(client, db_session):
     )
     assert update.status_code == 200
     assert update.json()["data"]["status"] == "Approved"
+
+def test_customer_cannot_list_admin_warranties(client):
+    email = "warranty-customer@example.com"
+    register(client, email)
+    customer_headers = {
+        "Authorization": f"Bearer {token(client, email)}"
+    }
+
+    response = client.get(
+        "/api/v1/admin/warranties",
+        headers=customer_headers,
+    )
+
+    assert response.status_code == 403
