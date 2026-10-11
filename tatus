@@ -1,0 +1,49 @@
+ app/core/deps.py                                   | 40 [31m------------[m
+ Procfile => backend/Procfile                       |  0
+ {app => backend/app}/__init__.py                   |  0
+ {app => backend/app}/api/__init__.py               |  0
+ {app => backend/app}/api/v1/__init__.py            |  0
+ {app => backend/app}/api/v1/api.py                 |  0
+ {app => backend/app}/api/v1/endpoints/__init__.py  |  0
+ {app => backend/app}/api/v1/endpoints/admin.py     |  0
+ {app => backend/app}/api/v1/endpoints/auth.py      |  0
+ .../app}/api/v1/endpoints/categories.py            |  0
+ {app => backend/app}/api/v1/endpoints/claims.py    |  0
+ {app => backend/app}/api/v1/endpoints/products.py  |  0
+ .../app}/api/v1/endpoints/registrations.py         |  0
+ {app => backend/app}/api/v1/endpoints/users.py     |  6 [32m+[m[31m-[m
+ .../app}/api/v1/endpoints/warranties.py            |  0
+ {app => backend/app}/core/__init__.py              |  0
+ {app => backend/app}/core/config.py                |  0
+ {app => backend/app}/core/database.py              |  3 [32m+[m[31m-[m
+ backend/app/core/deps.py                           | 75 [32m++++++++++++++++++++++[m
+ {app => backend/app}/core/security.py              |  0
+ {app => backend/app}/models/__init__.py            |  0
+ {app => backend/app}/models/category.py            |  0
+ {app => backend/app}/models/claim.py               |  0
+ {app => backend/app}/models/document.py            |  0
+ {app => backend/app}/models/product.py             |  0
+ {app => backend/app}/models/registration.py        |  0
+ {app => backend/app}/models/user.py                |  0
+ {app => backend/app}/models/warranty.py            |  0
+ {app => backend/app}/schemas/__init__.py           |  0
+ {app => backend/app}/schemas/category.py           |  0
+ {app => backend/app}/schemas/claim.py              |  0
+ {app => backend/app}/schemas/common.py             |  0
+ {app => backend/app}/schemas/product.py            |  0
+ {app => backend/app}/schemas/registration.py       |  0
+ {app => backend/app}/schemas/token.py              |  0
+ {app => backend/app}/schemas/user.py               |  0
+ {app => backend/app}/schemas/warranty.py           |  0
+ {app => backend/app}/services/__init__.py          |  0
+ {app => backend/app}/services/auth.py              |  0
+ {app => backend/app}/services/category.py          |  0
+ {app => backend/app}/services/claim.py             |  0
+ {app => backend/app}/services/product.py           |  0
+ {app => backend/app}/services/registration.py      |  0
+ {app => backend/app}/services/user.py              |  0
+ {app => backend/app}/services/warranty.py          |  0
+ main.py => backend/main.py                         | 15 [32m++++[m[31m-[m
+ requirements.txt => backend/requirements.txt       |  0
+ tests/test_api/v1/test_warranty_workflow.py        |  2 [32m+[m[31m-[m
+ 48 files changed, 93 insertions(+), 48 deletions(-)
